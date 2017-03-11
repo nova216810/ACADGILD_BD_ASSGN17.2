@@ -1,0 +1,53 @@
+Add few records in the table and update some of them. Use IP Address as row-key.
+Scan the table to view if all the previous versions are getting displayed.
+
+Enter values for the table clicks
+---------------------------------
+
+hbase(main):014:0> put 'clicks' ,'198.134.34.43', 'hits:count', '45'
+0 row(s) in 0.3190 seconds
+
+hbase(main):016:0> put 'clicks' ,'198.134.34.43', 'hits:count', '44'
+0 row(s) in 0.0220 seconds
+
+hbase(main):017:0> put 'clicks' ,'198.134.34.43', 'hits:count', '43'
+0 row(s) in 0.0150 seconds
+
+hbase(main):018:0> scan 'clicks', {COLUMN =>'hits:count', VERSIONS =>2}
+ROW                   COLUMN+CELL                                               
+ 198.134.34.43        column=hits:count, timestamp=1489233862901, value=43      
+ 198.134.34.43        column=hits:count, timestamp=1489233854327, value=44      
+1 row(s) in 0.0610 seconds
+
+hbase(main):019:0> scan 'clicks', {COLUMN =>'hits:count', VERSIONS =>5}
+ROW                   COLUMN+CELL                                               
+ 198.134.34.43        column=hits:count, timestamp=1489233862901, value=43      
+ 198.134.34.43        column=hits:count, timestamp=1489233854327, value=44      
+ 198.134.34.43        column=hits:count, timestamp=1489233820575, value=45      
+1 row(s) in 0.0600 seconds
+
+hbase(main):020:0> put 'clicks' ,'198.134.34.43', 'hits:count', '42'
+0 row(s) in 0.0220 seconds
+
+hbase(main):021:0> put 'clicks' ,'198.134.34.43', 'hits:count', '40'
+0 row(s) in 0.0210 seconds
+
+hbase(main):022:0> scan 'clicks', {COLUMN =>'hits:count', VERSIONS =>5}
+ROW                   COLUMN+CELL                                               
+ 198.134.34.43        column=hits:count, timestamp=1489233918722, value=40      
+ 198.134.34.43        column=hits:count, timestamp=1489233913206, value=42      
+ 198.134.34.43        column=hits:count, timestamp=1489233862901, value=43      
+ 198.134.34.43        column=hits:count, timestamp=1489233854327, value=44      
+ 198.134.34.43        column=hits:count, timestamp=1489233820575, value=45      
+1 row(s) in 0.1040 seconds
+
+hbase(main):023:0> put 'clicks' ,'198.134.33.63', 'hits:count', '35'
+0 row(s) in 0.0250 seconds
+
+
+hbase(main):024:0> scan 'clicks'
+ROW                              COLUMN+CELL                                                                                 
+ 198.134.33.63                   column=hits:count, timestamp=1489234003601, value=35                                        
+ 198.134.34.43                   column=hits:count, timestamp=1489233918722, value=40                                        
+2 row(s) in 0.0660 seconds
+
