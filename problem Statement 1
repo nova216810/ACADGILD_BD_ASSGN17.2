@@ -1,0 +1,39 @@
+
+Problem 1:
+Create an HBase table named 'clicks' with a column family 'hits' such that it should be able to
+store last 5 values of qualifiers inside 'hits' column family
+
+To initaite HBASE, Open terminal
+2) Enter start-hbase.sh
+3) Enter hbase shell
+
+Create Table name : clicks with column family hits
+--------------------------------------------------
+hbase(main):009:0> create 'clicks', 'hits'
+0 row(s) in 1.0270 seconds
+
+=> Hbase::Table - clicks
+hbase(main):010:0> list
+TABLE                                                                           
+clicks                                                                          
+1 row(s) in 0.0380 seconds
+
+=> ["clicks"]
+
+Alter table clicks to include 5 versions of hits
+--------------------------------------------------
+Disable the table
+-----------------
+hbase(main):011:0> disable 'clicks'
+0 row(s) in 1.6450 seconds
+Perform the Alter to the table
+------------------------------
+hbase(main):012:0> alter 'clicks', {NAME => 'hits', VERSIONS => 5}
+Updating all regions with the new schema...
+1/1 regions updated.
+Done.
+0 row(s) in 1.5620 seconds
+Enable the tbale 
+----------------
+hbase(main):013:0> enable 'clicks'
+0 row(s) in 0.6740 seconds
